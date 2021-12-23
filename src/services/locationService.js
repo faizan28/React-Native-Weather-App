@@ -6,12 +6,14 @@ export async function getLocationPermission() {
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+
         {
           title: 'Weather App',
           message:
             'Hey! I am Faizan Naeem. Would you mind giving me GPS permissions',
         },
       );
+
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         // permission granted
         // do code get location here.

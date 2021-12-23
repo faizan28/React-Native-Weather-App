@@ -2,12 +2,8 @@ import React, {Component} from 'react';
 import {
   View,
   Text,
-  Button,
   StyleSheet,
   Image,
-  StatusBar,
-  ScrollView,
-  SafeAreaView,
   Alert,
   TouchableHighlight,
 } from 'react-native';
@@ -20,10 +16,10 @@ import {
   updateLoading,
 } from './../../actions/counts';
 import {getLocationPermission} from '../../services/locationService';
-import AcitivityIndicator from './../activityIndicator';
-import {BackgroundImages} from '../../libs/constant';
+
 import {Dimensions} from 'react-native';
 import {HistoryComponent} from '../history/historyComponent';
+import {PermissionsAndroid} from 'react-native';
 
 var width = Dimensions.get('window').width;
 export class increment extends Component {
@@ -73,12 +69,25 @@ export class increment extends Component {
     }
     console.info(result);
   };
-  takeScreenShot = () => {
+  hasAndroidPermission = async () => {
+    const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
+
+    const hasPermission = await PermissionsAndroid.check(permission);
+    if (hasPermission) {
+      return true;
+    }
+
+    const status = await PermissionsAndroid.request(permission);
+    return status === 'granted';
+  };
+
+  async savePicture() {
     captureScreen({
       format: 'jpg',
       quality: 0.8,
     }).then(
       uri => {
+        console.log(uri);
         CameraRoll.save(uri)
           .then(resp => {
             console.log(resp);
@@ -91,6 +100,18 @@ export class increment extends Component {
         Alert.alert('Failed', 'Oops, snapshot failed');
       },
     );
+    //   if (Platform.OS === "android" && !(await hasAndroidPermission())) {
+    //     return;
+    //   }
+
+    //   CameraRoll.save(tag, { type, album })
+  }
+  takeScreenShot = async () => {
+    const permissionResult = await this.hasAndroidPermission();
+    console.log('PERMISSION=>', permissionResult);
+    if (permissionResult) {
+      this.savePicture();
+    }
   };
   render() {
     console.log('render');
