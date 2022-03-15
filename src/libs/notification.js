@@ -23,9 +23,9 @@ class Notifications {
 
     PushNotification.createChannel(
       {
-        channelId: 'reminders', // (required)
-        channelName: 'Task reminder notifications', // (required)
-        channelDescription: 'Reminder for any tasks',
+        channelId: 'weather', // (required)
+        channelName: 'weather reminder notifications', // (required)
+        channelDescription: 'weather reminder',
       },
       () => {},
     );
@@ -35,11 +35,12 @@ class Notifications {
     });
   }
 
-  schduleNotification(date) {
+  schduleNotification(date, data) {
+    console.log('NOTIFICATION:', data);
     PushNotification.localNotificationSchedule({
-      channelId: 'reminders',
-      title: '🔔 Reminder!',
-      message: 'You have set this reminder',
+      channelId: 'weather',
+      title: 'Weather Update',
+      message: `Temp:${data?.temp_c}c, Wind:${data?.wind_kph}kph, Humidity:${data?.humidity}%`,
       importance: 'high',
       ongoing: true,
       actions: '["Yes", "No"]',

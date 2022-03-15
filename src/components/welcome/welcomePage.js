@@ -2,9 +2,14 @@ import React, {Component} from 'react';
 import {View, ImageBackground, StyleSheet} from 'react-native';
 import {connect} from 'react-redux';
 import WelcomeText from './welcomeText';
+import {Actions} from 'react-native-router-flux';
 export class welcome extends Component {
   constructor(props) {
     super(props);
+    console.log('weatherReducer:', props);
+    if (props.weatherReducer?.currentWeatherData?.current) {
+      Actions.home();
+    }
   }
   render() {
     return (
@@ -20,7 +25,7 @@ export class welcome extends Component {
   }
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({weatherReducer: state.countReducers});
 
 const mapDispatchToProps = {};
 const styles = StyleSheet.create({

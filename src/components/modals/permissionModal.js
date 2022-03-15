@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {getLocationPermission} from '../../services/locationService';
+import Notifications from './../../libs/notification';
 class PermissionModal extends Component {
   state = {
     modalVisible: false,
@@ -40,6 +41,12 @@ class PermissionModal extends Component {
   }
   componentDidUpdate(prevProps) {
     if (prevProps.currentWeatherData !== this.props.currentWeatherData) {
+      console.log('newWeather=>', this.props.currentWeatherData.current);
+      Notifications.schduleNotification(new Date(Date.now() + 2 * 1000), {
+        temp_c: this.props.currentWeatherData?.current?.temp_c,
+        wind_kph: this.props.currentWeatherData?.current?.wind_kph,
+        humidity: this.props.currentWeatherData?.current?.humidity,
+      });
       this.props.parentCallback(false);
     }
   }
